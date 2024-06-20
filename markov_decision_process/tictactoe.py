@@ -142,14 +142,14 @@ class TicTacToe:
         try:
             state = np.copy(state)
 
-            u = input("Position: ")
+            u = input("Position (1 to 9): ")
             u = int(u) - 1
 
             i = u // 3
             j = u % 3
 
             while u < 0 or u > 8 or state[i, j] != 0:
-                u = input("Position: ")
+                u = input("Position (1 to 9): ")
                 u = int(u) - 1
 
                 i = u // 3
@@ -160,16 +160,3 @@ class TicTacToe:
 
         except ValueError:
             return self.user_play(state, side)
-
-
-if __name__ == '__main__':
-    ttt = TicTacToe()
-    state = np.zeros((3, 3), dtype=np.int8)
-
-    ttt.random_play(state)
-    ttt.print(state)
-    i = ttt.state_to_index(state)
-    print(i)
-    new_state = ttt.index_to_state(i)
-    ttt.state = new_state
-    ttt.print(state)

@@ -258,11 +258,12 @@ if __name__ == '__main__':
     # mdp.train_value_iteration(30)
     # mdp.RL_monte_carlo(50, 2000)
 
-    if os.path.isfile("./policy.npy"):
-        mdp.policy = np.load("./policy.npy")
+    path = "markov_decision_process/out/tic_tac_toe_policy.npy"
+    if os.path.isfile(path):
+        mdp.policy = np.load(path)
         mdp.play(30)
     else:
         Q = mdp.RL_Q_learning(70000)
         policy = mdp.get_policy_from_Q(Q)
-        np.save("./policy.npy", policy)
+        np.save(path, policy)
         print(mdp.V_from_Q(Q))
