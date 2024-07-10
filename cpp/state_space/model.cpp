@@ -1,28 +1,28 @@
-#include <iostream>
 #include "model.h"
 
-using namespace std;
-using namespace Eigen;
-
-LinearStateSpaceModel::LinearStateSpaceModel(MatrixXd A, MatrixXd B, MatrixXd C) : A(A), B(B)
+LinearStateSpaceModel::LinearStateSpaceModel(MatrixXd A, MatrixXd B) : A(A), B(B)
 {
     nx = A.rows();
     nu = B.cols();
 
-    if (C == MatrixXd::Zero(0, 0))
-        C = MatrixXd(nx, nx);
+    int numInputs = sizeof(possibleInputs) / sizeof(*possibleInputs);
+
+    for (int i = 0; i < numInputs; i++)
+    {
+        possibleInputs[i] = -2 + i * 4.0 / numInputs;
+    }
 }
 
-MatrixXd LinearStateSpaceModel::x_next(VectorXd x, VectorXd u)
+MatrixXd LinearStateSpaceModel::xNext(X x, U u)
 {
     return A * x + B * u;
 }
 
-MatrixXd LinearStateSpaceModel::y(VectorXd x)
+void LinearStateSpaceModel::findSteadyState(X desired_x_ss, U desired_u_ss)
 {
-    return C * x;
 }
 
-void LinearStateSpaceModel::find_steady_state(VectorXd desired_x_ss, VectorXd desired_u_ss)
+float LinearStateSpaceModel::getReward(X x, U u, X xss, U uss)
 {
+    return (x - xss).dot(x - xss) + pow(u - uss, 2) * 0.1;
 }

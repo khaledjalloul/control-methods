@@ -3,6 +3,7 @@
 #ifndef GRID
 #define GRID
 
+typedef std::tuple<int, int> GridState;
 enum GridAction
 {
     stay,
@@ -11,8 +12,6 @@ enum GridAction
     right,
     bottom
 };
-
-typedef std::tuple<int, int> GridState;
 
 class Grid : public Sim<GridState, GridAction>
 {

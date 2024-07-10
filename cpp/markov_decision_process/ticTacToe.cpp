@@ -1,8 +1,5 @@
 #include "ticTacToe.h"
 
-using namespace std;
-using namespace Eigen;
-
 IOFormat VectorFormat(0, 0, "", "");
 
 TicTacToe::TicTacToe()

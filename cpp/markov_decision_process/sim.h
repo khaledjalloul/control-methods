@@ -5,6 +5,9 @@
 #ifndef SIM_ABSTRACT
 #define SIM_ABSTRACT
 
+using namespace std;
+using namespace Eigen;
+
 template <typename State, typename Action>
 class Sim
 {

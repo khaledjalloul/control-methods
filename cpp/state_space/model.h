@@ -1,9 +1,14 @@
+#include <iostream>
 #include <Eigen/Dense>
 
+#ifndef STATE_SPACE_MODEL
+#define STATE_SPACE_MODEL
+
+using namespace std;
 using namespace Eigen;
 
-#ifndef STATE_SPACE_DECLARATION
-#define STATE_SPACE_DECLARATION
+typedef Eigen::Vector2d X;
+typedef float U;
 
 class LinearStateSpaceModel
 {
@@ -12,13 +17,15 @@ private:
     int nx, nu;
 
 public:
-    LinearStateSpaceModel(MatrixXd A, MatrixXd B, MatrixXd C = MatrixXd::Zero(0, 0));
+    float possibleInputs[20];
 
-    MatrixXd x_next(VectorXd x, VectorXd u);
+    LinearStateSpaceModel(MatrixXd A, MatrixXd B);
 
-    MatrixXd y(VectorXd x);
+    MatrixXd xNext(X x, U u);
 
-    void find_steady_state(VectorXd desired_x_ss, VectorXd desired_u_ss = VectorXd::Zero(0));
+    void findSteadyState(X desired_x_ss, U desired_u_ss = 0);
+
+    float getReward(X x, U u, X xss, U uss);
 };
 
 #endif
