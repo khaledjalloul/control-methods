@@ -1,1 +1,4 @@
-__pycache__/
+.vscode
+
+**/__pycache__/
+**/cpp_out/
