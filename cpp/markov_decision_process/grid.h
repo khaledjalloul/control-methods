@@ -1,5 +1,7 @@
-#include <iostream>
 #include "sim.h"
+
+#ifndef GRID
+#define GRID
 
 enum GridAction
 {
@@ -31,6 +33,6 @@ public:
     bool isDone(GridState state);
 
     GridState play(GridState oldState, GridAction u);
-
-    std::tuple<GridAction, GridState> randomPlay(GridState state);
 };
+
+#endif

@@ -11,7 +11,7 @@ For a given linear state space model (that includes an input delay), two control
 
 <br>
 
-![Results](state_space/out/results.png)
+![Results](python/state_space/out/results.png)
 
 ## Markov Decision Process
 

@@ -95,10 +95,3 @@ GridState Grid::play(GridState oldState, GridAction u)
 
     return nextState;
 }
-
-tuple<GridAction, GridState> Grid::randomPlay(GridState state)
-{
-    GridAction u = GridAction(rand() % GridAction::bottom);
-    GridState newState = play(state, u);
-    return {u, newState};
-}
