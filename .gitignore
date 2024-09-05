@@ -1,4 +1,4 @@
 .vscode
 
 **/__pycache__/
-**/cpp_out/
+**/build/

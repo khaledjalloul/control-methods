@@ -1,5 +1,5 @@
 #include <iostream>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 #ifndef STATE_SPACE_MODEL
 #define STATE_SPACE_MODEL

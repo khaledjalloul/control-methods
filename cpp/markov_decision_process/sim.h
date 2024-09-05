@@ -1,6 +1,6 @@
 #include <iostream>
 #include <tuple>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 #ifndef SIM_ABSTRACT
 #define SIM_ABSTRACT
