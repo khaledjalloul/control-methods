@@ -1,22 +1,27 @@
 #include "controllers/q_learning.hpp"
 #include "models/mdp/grid.hpp"
+#include "models/mdp/tic_tac_toe.hpp"
 
 int main()
 {
-    auto grid = std::make_shared<Grid>(5, GridState{0, 0}, GridState{2, 3});
-    QLearning<GridState, GridAction> q_learning(grid, grid->size * grid->size, GridAction::bottom + 1);
+    int size = 5;
+    auto init = GridState{0, 0};
+    auto goal = GridState{2, 3};
 
-    Eigen::MatrixXd Q = q_learning.RL_Q_learning(1000);
-    Eigen::MatrixXd V = Q.rowwise().maxCoeff();
-    V.resize(grid->size, grid->size);
+    auto grid = std::make_shared<Grid>(size);
+    QLearning<GridState, GridAction> q_learning(grid, size * size, GridAction::bottom + 1, init, goal);
+
+    q_learning.train(1000);
+    Eigen::MatrixXd V = q_learning.get_Q().rowwise().maxCoeff();
+    V.resize(size, size);
     std::cout << V << std::endl;
 
-    // TicTacToe ttt;
-    // QLearning<TTTState, TTTAction> mdp(&ttt, (int)pow(3, 9), 9);
+    auto ttt = std::make_shared<TicTacToe>();
+    QLearning<TTTState, TTTAction> mdp(ttt, (int)pow(3, 9), 9, Eigen::Matrix3i::Zero(), Eigen::Matrix3i::Zero());
 
-    // Eigen::MatrixXd Q = mdp.RL_QLearning(70000);
-    // Eigen::MatrixXd policy = mdp.getPolicyFromQ(Q);
-    // ttt.playMatch(10, policy);
+    mdp.train(70000);
+    Eigen::MatrixXd policy = mdp.get_policy();
+    ttt->play_match(10, policy);
 
-    // return 0;
+    return 0;
 }

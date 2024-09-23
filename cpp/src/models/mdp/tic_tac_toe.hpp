@@ -22,11 +22,11 @@ public:
 
     int state_to_index(TTTState x);
 
-    TTTState index_to_state(int index);
+    TTTState index_to_state(int x_index);
 
-    std::tuple<int, Eigen::VectorXd> get_reward_and_trans_prob(int index, TTTAction u);
+    std::tuple<int, Eigen::VectorXd> get_reward_and_trans_prob(int x_index, TTTAction u, TTTState x_goal = Eigen::Matrix3i::Zero());
 
-    bool is_done(TTTState x);
+    bool is_done(TTTState x, TTTState x_goal = Eigen::Matrix3i::Zero());
 
     TTTState play(TTTState x_old, TTTAction u);
 

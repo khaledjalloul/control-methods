@@ -4,7 +4,7 @@ Eigen::IOFormat VectorFormat(0, 0, "", "");
 
 TicTacToe::TicTacToe()
 {
-    x_initial = Eigen::Matrix3i::Zero();
+    // x_initial_ = Eigen::Matrix3i::Zero();
 }
 
 int TicTacToe::state_to_index(TTTState x)
@@ -14,29 +14,29 @@ int TicTacToe::state_to_index(TTTState x)
     return stoi(state_str.str(), nullptr, 3);
 }
 
-TTTState TicTacToe::index_to_state(int index)
+TTTState TicTacToe::index_to_state(int x_index)
 {
     Eigen::MatrixXi x = Eigen::MatrixXi::Zero(1, 9);
 
     for (int i = 0; i < 9; i++)
     {
-        int cur = index / (int)pow(3, 8 - i);
+        int cur = x_index / (int)pow(3, 8 - i);
         x(0, i) = cur;
-        index = index - cur * pow(3, 8 - i);
+        x_index = x_index - cur * pow(3, 8 - i);
     }
 
     return x.reshaped<Eigen::RowMajor>(3, 3);
 }
 
-std::tuple<int, Eigen::VectorXd> TicTacToe::get_reward_and_trans_prob(int index, TTTAction u)
+std::tuple<int, Eigen::VectorXd> TicTacToe::get_reward_and_trans_prob(int x_index, TTTAction u, TTTState x_goal)
 {
-    TTTState x = index_to_state(index);
+    TTTState x = index_to_state(x_index);
 
     int reward = 0;
     Eigen::VectorXd trans_prob((int)pow(3, 9));
 
     if (is_done(x))
-        trans_prob(index) = 1;
+        trans_prob(x_index) = 1;
 
     else if ((x.array() == opp_side_).count() > (x.array() == side_).count())
     {
@@ -44,7 +44,7 @@ std::tuple<int, Eigen::VectorXd> TicTacToe::get_reward_and_trans_prob(int index,
 
         if (x(i, j) != 0)
         {
-            trans_prob(index) = 1;
+            trans_prob(x_index) = 1;
             reward = -1;
         }
         else
@@ -102,7 +102,7 @@ std::tuple<int, Eigen::VectorXd> TicTacToe::get_reward_and_trans_prob(int index,
     return {reward, trans_prob};
 }
 
-bool TicTacToe::is_done(TTTState x)
+bool TicTacToe::is_done(TTTState x, TTTState x_goal)
 {
     if ((x.array() != 0).all())
         return true;
@@ -229,9 +229,9 @@ void TicTacToe::play_match(int num_eps, Eigen::MatrixXd policy)
             if (is_done(x))
                 break;
 
-            int index = state_to_index(x);
+            int x_index = state_to_index(x);
             TTTAction u;
-            policy.row(index).maxCoeff(&u);
+            policy.row(x_index).maxCoeff(&u);
 
             x = play(x, u);
             std::cout << display_game(x) << std::endl;
