@@ -14,9 +14,6 @@ enum TTTStateOptions
 
 class TicTacToe : public MarkovDecisionProcess<TTTState, TTTAction>
 {
-private:
-    int side_ = TTTStateOptions::O, opp_side_ = TTTStateOptions::X;
-
 public:
     TicTacToe();
 
@@ -35,4 +32,7 @@ public:
     TTTState user_play(TTTState);
 
     void play_match(int num_eps, Eigen::MatrixXd policy);
+
+private:
+    int side_ = TTTStateOptions::O, opp_side_ = TTTStateOptions::X;
 };

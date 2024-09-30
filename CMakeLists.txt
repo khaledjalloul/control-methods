@@ -4,22 +4,21 @@ project(control_methods)
 find_package(Eigen3 REQUIRED)
 
 set(MODELS
-    src/models/state_space/state_space.hpp
     src/models/state_space/state_space.cpp
-    src/models/mdp/mdp.hpp
-    src/models/mdp/grid.hpp
     src/models/mdp/grid.cpp
-    src/models/mdp/tic_tac_toe.hpp
     src/models/mdp/tic_tac_toe.cpp
 )
 
 set(CONTROLLERS
-    src/controllers/q_learning.hpp
     src/controllers/q_learning.cpp
+    src/controllers/policy_value_iteration.cpp
 )
 
 add_library(${PROJECT_NAME} ${MODELS} ${CONTROLLERS})
 target_link_libraries(${PROJECT_NAME} Eigen3::Eigen)
 
-add_executable(main src/main.cpp)
-target_link_libraries(main ${PROJECT_NAME})
+add_executable(${PROJECT_NAME}_main src/main.cpp)
+target_link_libraries(${PROJECT_NAME}_main ${PROJECT_NAME})
+
+install(TARGETS ${PROJECT_NAME} DESTINATION lib)
+install(TARGETS ${PROJECT_NAME}_main DESTINATION bin)

@@ -14,9 +14,6 @@ enum GridAction
 
 class Grid : public MarkovDecisionProcess<GridState, GridAction>
 {
-private:
-    int size_;
-
 public:
     Grid(int size);
 
@@ -29,4 +26,7 @@ public:
     bool is_done(GridState x, GridState x_goal);
 
     GridState play(GridState x_old, GridAction u);
+
+private:
+    int size_;
 };

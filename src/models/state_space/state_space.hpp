@@ -5,13 +5,9 @@
 
 using Matrix = Eigen::MatrixXd;
 
-template<typename State, typename Action>
+template <typename State, typename Action>
 class LTI_StateSpaceModel
 {
-private:
-    Matrix A_, B_, C_;
-    int nx_, nu_;
-
 public:
     LTI_StateSpaceModel(Matrix A, Matrix B);
 
@@ -21,4 +17,8 @@ public:
 
     // float possibleInputs[20];
     // float get_reward(State x, Action u, State x_ss, Action u_ss);
+
+private:
+    Matrix A_, B_, C_;
+    int nx_, nu_;
 };

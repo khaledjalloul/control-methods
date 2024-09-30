@@ -5,6 +5,7 @@
 #include <eigen3/Eigen/Dense>
 
 using Matrix = Eigen::MatrixXd;
+using Vector = Eigen::VectorXd;
 
 template <typename State, typename Action>
 class MarkovDecisionProcess
@@ -14,7 +15,7 @@ public:
 
     virtual State index_to_state(int x_index) = 0;
 
-    virtual std::tuple<int, Eigen::VectorXd> get_reward_and_trans_prob(int x_index, Action u, State x_goal = 0) = 0;
+    virtual std::tuple<int, Vector> get_reward_and_trans_prob(int x_index, Action u, State x_goal = State{}) = 0;
 
     virtual bool is_done(State x, State x_goal = 0) = 0;
 

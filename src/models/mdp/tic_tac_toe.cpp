@@ -2,10 +2,7 @@
 
 Eigen::IOFormat VectorFormat(0, 0, "", "");
 
-TicTacToe::TicTacToe()
-{
-    // x_initial_ = Eigen::Matrix3i::Zero();
-}
+TicTacToe::TicTacToe() {}
 
 int TicTacToe::state_to_index(TTTState x)
 {

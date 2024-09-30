@@ -1,8 +1,8 @@
 #include "q_learning.hpp"
 
 template <typename State, typename Action>
-QLearning<State, Action>::QLearning(std::shared_ptr<MarkovDecisionProcess<State, Action>> mdp, int nx, int nu, State x_initial, State x_goal) :
-    mdp_(std::move(mdp)), nx_(nx), nu_(nu), x_initial_(x_initial), x_goal_(x_goal)
+QLearning<State, Action>::QLearning(MDP_Ptr mdp, int nx, int nu, State x_initial, State x_goal)
+    : mdp_(std::move(mdp)), nx_(nx), nu_(nu), x_initial_(x_initial), x_goal_(x_goal)
 {
     Q_ = Eigen::MatrixXd::Zero(nx_, nu_);
 }
@@ -77,7 +77,5 @@ void QLearning<State, Action>::train(int num_eps)
     }
 }
 
-#include "../models/mdp/grid.hpp"
-#include "../models/mdp/tic_tac_toe.hpp"
 template class QLearning<GridState, GridAction>;
 template class QLearning<TTTState, TTTAction>;
