@@ -1,22 +1,24 @@
 #pragma once
 
 #include <iostream>
+#include <optional>
 #include <eigen3/Eigen/Dense>
+#include <OsqpEigen/OsqpEigen.h>
 
 using Matrix = Eigen::MatrixXd;
+using Vector = Eigen::VectorXd;
 
-template <typename State, typename Action>
 class LTI_StateSpaceModel
 {
 public:
     LTI_StateSpaceModel(Matrix A, Matrix B);
 
-    Matrix x_next(State x, Action u);
+    Matrix x_next(Vector x, Vector u);
 
-    void find_steady_state(State desired_x_ss, Action desired_u_ss = 0);
+    Vector find_steady_state(Vector desired_x_ss, std::optional<Vector> desired_u_ss = std::nullopt);
 
     // float possibleInputs[20];
-    // float get_reward(State x, Action u, State x_ss, Action u_ss);
+    // float get_reward(Vector x, Vector u, State x_ss, Vector u_ss);
 
 private:
     Matrix A_, B_, C_;
