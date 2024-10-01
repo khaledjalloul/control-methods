@@ -21,7 +21,7 @@ public:
 
     TTTState index_to_state(int x_index);
 
-    std::tuple<int, Vector> get_reward_and_trans_prob(int x_index, TTTAction u, TTTState x_goal = Eigen::Matrix3i::Zero());
+    RewardTransProb get_reward_and_trans_prob(int x_index, TTTAction u, TTTState x_goal = Eigen::Matrix3i::Zero());
 
     bool is_done(TTTState x, TTTState x_goal = Eigen::Matrix3i::Zero());
 

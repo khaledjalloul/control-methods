@@ -36,14 +36,14 @@ void policy_value_iteration_demo()
     auto grid = std::make_shared<Grid>(size);
     PolicyValueIteration<GridState, GridAction> policy_value_iteration(grid, size * size, GridAction::bottom + 1, goal);
 
-    std::tuple<Matrix, Vector> policy_V = policy_value_iteration.train_policy_iteration();
+    auto policy_V = policy_value_iteration.train_policy_iteration();
     std::cout << "Policy Iteration:\n"
-              << std::get<1>(policy_V).reshaped<Eigen::RowMajor>(size, size) << "\n "
+              << policy_V.V.reshaped<Eigen::RowMajor>(size, size) << "\n "
               << std::endl;
 
     policy_V = policy_value_iteration.train_value_iteration();
     std::cout << "Value Iteration:\n"
-              << std::get<1>(policy_V).reshaped<Eigen::RowMajor>(size, size) << std::endl;
+              << policy_V.V.reshaped<Eigen::RowMajor>(size, size) << std::endl;
 }
 
 int main(int argc, char **argv)

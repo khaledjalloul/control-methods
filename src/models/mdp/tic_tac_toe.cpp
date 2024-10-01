@@ -25,7 +25,7 @@ TTTState TicTacToe::index_to_state(int x_index)
     return x.reshaped<Eigen::RowMajor>(3, 3);
 }
 
-std::tuple<int, Vector> TicTacToe::get_reward_and_trans_prob(int x_index, TTTAction u, TTTState x_goal)
+RewardTransProb TicTacToe::get_reward_and_trans_prob(int x_index, TTTAction u, TTTState x_goal)
 {
     TTTState x = index_to_state(x_index);
 

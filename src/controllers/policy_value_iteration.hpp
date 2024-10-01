@@ -2,8 +2,13 @@
 
 #include <memory>
 
-#include "../models/mdp/grid.hpp"
-#include "../models/mdp/tic_tac_toe.hpp"
+#include "grid.hpp"
+#include "tic_tac_toe.hpp"
+
+struct PolicyValue {
+    Matrix policy;
+    Vector V;
+};
 
 template <class State, class Action>
 class PolicyValueIteration
@@ -15,11 +20,11 @@ public:
 
     Vector evaluate_policy(Matrix policy);
 
-    std::tuple<Matrix, Vector> improve_policy(Vector V);
+    PolicyValue improve_policy(Vector V);
 
-    std::tuple<Matrix, Vector> train_policy_iteration(int num_iters = 30);
+    PolicyValue train_policy_iteration(int num_iters = 30);
 
-    std::tuple<Matrix, Vector> train_value_iteration(int num_iters = 30);
+    PolicyValue train_value_iteration(int num_iters = 30);
 
 private:
     MDP_Ptr mdp_;

@@ -18,8 +18,8 @@ Vector PolicyValueIteration<State, Action>::evaluate_policy(Matrix policy)
         {
             auto reward_and_trans_prob = mdp_->get_reward_and_trans_prob(x, Action(u), x_goal_);
 
-            R(x) = R(x) + policy(x, u) * std::get<0>(reward_and_trans_prob);
-            P.row(x) += policy(x, u) * std::get<1>(reward_and_trans_prob);
+            R(x) = R(x) + policy(x, u) * reward_and_trans_prob.reward;
+            P.row(x) += policy(x, u) * reward_and_trans_prob.trans_prob;
         }
     }
 
@@ -28,7 +28,7 @@ Vector PolicyValueIteration<State, Action>::evaluate_policy(Matrix policy)
 }
 
 template <class State, class Action>
-std::tuple<Matrix, Vector> PolicyValueIteration<State, Action>::improve_policy(Vector V)
+PolicyValue PolicyValueIteration<State, Action>::improve_policy(Vector V)
 {
     Matrix policy = Matrix::Ones(nx_, nu_) / nu_;
     Vector V_new = Vector::Zero(nx_);
@@ -40,7 +40,7 @@ std::tuple<Matrix, Vector> PolicyValueIteration<State, Action>::improve_policy(V
         {
             auto reward_and_trans_prob = mdp_->get_reward_and_trans_prob(x, Action(u), x_goal_);
 
-            scores(u) = std::get<0>(reward_and_trans_prob) + gamma_ * std::get<1>(reward_and_trans_prob).dot(V);
+            scores(u) = reward_and_trans_prob.reward + gamma_ * reward_and_trans_prob.trans_prob.dot(V);
 
             policy.row(x).setZero();
             int argmax;
@@ -49,11 +49,11 @@ std::tuple<Matrix, Vector> PolicyValueIteration<State, Action>::improve_policy(V
         }
     }
 
-    return std::make_tuple(policy, V_new);
+    return {policy, V_new};
 }
 
 template <class State, class Action>
-std::tuple<Matrix, Vector> PolicyValueIteration<State, Action>::train_policy_iteration(int num_iters)
+PolicyValue PolicyValueIteration<State, Action>::train_policy_iteration(int num_iters)
 {
     Matrix policy = Matrix::Ones(nx_, nu_) / nu_;
     Vector V = Vector::Random(nx_);
@@ -67,17 +67,17 @@ std::tuple<Matrix, Vector> PolicyValueIteration<State, Action>::train_policy_ite
         V = V_new;
 
         auto policy_and_V_new = improve_policy(V);
-        policy = std::get<0>(policy_and_V_new);
+        policy = policy_and_V_new.policy;
 
         if (diff < 0.1)
             break;
     }
 
-    return std::make_tuple(policy, V);
+    return {policy, V};
 }
 
 template <class State, class Action>
-std::tuple<Matrix, Vector> PolicyValueIteration<State, Action>::train_value_iteration(int num_iters)
+PolicyValue PolicyValueIteration<State, Action>::train_value_iteration(int num_iters)
 {
     Matrix policy = Matrix::Ones(nx_, nu_) / nu_;
     Vector V = Vector::Zero(nx_);
@@ -86,15 +86,15 @@ std::tuple<Matrix, Vector> PolicyValueIteration<State, Action>::train_value_iter
     {
         auto policy_and_V_new = improve_policy(V);
 
-        auto diff = ((Vector)(std::get<1>(policy_and_V_new) - V)).lpNorm<Eigen::Infinity>();
-        policy = std::get<0>(policy_and_V_new);
-        V = std::get<1>(policy_and_V_new);
+        auto diff = ((Vector)(policy_and_V_new.V - V)).lpNorm<Eigen::Infinity>();
+        policy = policy_and_V_new.policy;
+        V = policy_and_V_new.V;
 
         if (diff < 0.1)
             break;
     }
 
-    return std::make_tuple(policy, V);
+    return {policy, V};
 }
 
 template class PolicyValueIteration<GridState, GridAction>;

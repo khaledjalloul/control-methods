@@ -63,7 +63,7 @@ void QLearning<State, Action>::train(int num_eps)
             Action u = sample_action(index, i, num_eps);
 
             auto reward_and_trans_prob = mdp_->get_reward_and_trans_prob(index, u, x_goal_);
-            int reward = std::get<0>(reward_and_trans_prob);
+            int reward = reward_and_trans_prob.reward;
 
             State x_next = mdp_->play(x, u);
 

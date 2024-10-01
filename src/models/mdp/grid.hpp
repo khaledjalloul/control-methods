@@ -2,7 +2,11 @@
 
 #include "mdp.hpp"
 
-using GridState = std::tuple<int, int>;
+struct GridState
+{
+    int x;
+    int y;
+};
 enum GridAction
 {
     stay,
@@ -21,7 +25,7 @@ public:
 
     GridState index_to_state(int x_index);
 
-    std::tuple<int, Vector> get_reward_and_trans_prob(int x_index, GridAction u, GridState x_goal);
+    RewardTransProb get_reward_and_trans_prob(int x_index, GridAction u, GridState x_goal);
 
     bool is_done(GridState x, GridState x_goal);
 

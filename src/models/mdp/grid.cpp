@@ -4,7 +4,7 @@ Grid::Grid(int size) : size_(size) {}
 
 int Grid::state_to_index(GridState x)
 {
-    return std::get<0>(x) * size_ + std::get<1>(x);
+    return x.y * size_ + x.x;
 }
 
 GridState Grid::index_to_state(int x_index)
@@ -12,7 +12,7 @@ GridState Grid::index_to_state(int x_index)
     return GridState{x_index / size_, x_index % size_};
 }
 
-std::tuple<int, Vector> Grid::get_reward_and_trans_prob(int x_index, GridAction u, GridState x_goal)
+RewardTransProb Grid::get_reward_and_trans_prob(int x_index, GridAction u, GridState x_goal)
 {
     GridState x_old = index_to_state(x_index);
     GridState x_next;
@@ -23,42 +23,42 @@ std::tuple<int, Vector> Grid::get_reward_and_trans_prob(int x_index, GridAction 
         x_next = x_old;
     else if (u == GridAction::top)
     {
-        if (std::get<0>(x_old) == 0)
+        if (x_old.y == 0)
         {
             trans_prob(x_index) = 1;
             return {-1, trans_prob};
         }
-        x_next = GridState{std::get<0>(x_old) - 1, std::get<1>(x_old)};
+        x_next = GridState{x_old.y - 1, x_old.x};
     }
     else if (u == GridAction::left)
     {
-        if (std::get<1>(x_old) == 0)
+        if (x_old.x == 0)
         {
             trans_prob(x_index) = 1;
             return {-1, trans_prob};
         }
-        x_next = GridState{std::get<0>(x_old), std::get<1>(x_old) - 1};
+        x_next = GridState{x_old.y, x_old.x - 1};
     }
     else if (u == GridAction::right)
     {
-        if (std::get<1>(x_old) == size_ - 1)
+        if (x_old.x == size_ - 1)
         {
             trans_prob(x_index) = 1;
             return {-1, trans_prob};
         }
-        x_next = GridState{std::get<0>(x_old), std::get<1>(x_old) + 1};
+        x_next = GridState{x_old.y, x_old.x + 1};
     }
     else if (u == GridAction::bottom)
     {
-        if (std::get<0>(x_old) == size_ - 1)
+        if (x_old.y == size_ - 1)
         {
             trans_prob(x_index) = 1;
             return {-1, trans_prob};
         }
-        x_next = GridState{std::get<0>(x_old) + 1, std::get<1>(x_old)};
+        x_next = GridState{x_old.y + 1, x_old.x};
     }
 
-    if (x_old == x_goal)
+    if (x_old.x == x_goal.x && x_old.y == x_goal.y)
     {
         trans_prob(x_index) = 1;
         return {1, trans_prob};
@@ -71,21 +71,21 @@ std::tuple<int, Vector> Grid::get_reward_and_trans_prob(int x_index, GridAction 
 
 bool Grid::is_done(GridState x, GridState x_goal)
 {
-    return x == x_goal;
+    return x.x == x_goal.x && x.y == x_goal.y;
 }
 
 GridState Grid::play(GridState x_old, GridAction u)
 {
     GridState x_next = x_old;
 
-    if (u == GridAction::top && std::get<0>(x_old) > 0)
-        x_next = GridState{std::get<0>(x_old) - 1, std::get<1>(x_old)};
-    else if (u == GridAction::left && std::get<1>(x_old) > 0)
-        x_next = GridState{std::get<0>(x_old), std::get<1>(x_old) - 1};
-    else if (u == GridAction::right && std::get<1>(x_old) < size_ - 1)
-        x_next = GridState{std::get<0>(x_old), std::get<1>(x_old) + 1};
-    else if (u == GridAction::bottom && std::get<0>(x_old) < size_ - 1)
-        x_next = GridState{std::get<0>(x_old) + 1, std::get<1>(x_old)};
+    if (u == GridAction::top && x_old.y > 0)
+        x_next = GridState{x_old.y - 1, x_old.x};
+    else if (u == GridAction::left && x_old.x > 0)
+        x_next = GridState{x_old.y, x_old.x - 1};
+    else if (u == GridAction::right && x_old.x < size_ - 1)
+        x_next = GridState{x_old.y, x_old.x + 1};
+    else if (u == GridAction::bottom && x_old.y < size_ - 1)
+        x_next = GridState{x_old.y + 1, x_old.x};
 
     return x_next;
 }

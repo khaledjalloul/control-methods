@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "../models/mdp/grid.hpp"
-#include "../models/mdp/tic_tac_toe.hpp"
+#include "grid.hpp"
+#include "tic_tac_toe.hpp"
 
 template <class State, class Action>
 class QLearning
