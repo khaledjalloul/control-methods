@@ -21,7 +21,7 @@ public:
 
     GridState index_to_state(int x_index);
 
-    std::tuple<int, Eigen::VectorXd> get_reward_and_trans_prob(int x_index, GridAction u, GridState x_goal);
+    std::tuple<int, Vector> get_reward_and_trans_prob(int x_index, GridAction u, GridState x_goal);
 
     bool is_done(GridState x, GridState x_goal);
 

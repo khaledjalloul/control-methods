@@ -25,12 +25,12 @@ TTTState TicTacToe::index_to_state(int x_index)
     return x.reshaped<Eigen::RowMajor>(3, 3);
 }
 
-std::tuple<int, Eigen::VectorXd> TicTacToe::get_reward_and_trans_prob(int x_index, TTTAction u, TTTState x_goal)
+std::tuple<int, Vector> TicTacToe::get_reward_and_trans_prob(int x_index, TTTAction u, TTTState x_goal)
 {
     TTTState x = index_to_state(x_index);
 
     int reward = 0;
-    Eigen::VectorXd trans_prob((int)pow(3, 9));
+    Vector trans_prob = Vector::Zero((int)pow(3, 9));
 
     if (is_done(x))
         trans_prob(x_index) = 1;
@@ -211,7 +211,7 @@ TTTState TicTacToe::user_play(TTTState x_old)
     return x;
 }
 
-void TicTacToe::play_match(int num_eps, Eigen::MatrixXd policy)
+void TicTacToe::play_match(int num_eps, Matrix policy)
 {
     for (int i = 0; i < num_eps; i++)
     {

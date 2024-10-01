@@ -67,10 +67,8 @@ std::tuple<Matrix, Vector> PolicyValueIteration<State, Action>::train_policy_ite
         V = V_new;
 
         auto policy_and_V_new = improve_policy(V);
-
         policy = std::get<0>(policy_and_V_new);
 
-        std::cout << diff << std::endl;
         if (diff < 0.1)
             break;
     }
@@ -92,7 +90,6 @@ std::tuple<Matrix, Vector> PolicyValueIteration<State, Action>::train_value_iter
         policy = std::get<0>(policy_and_V_new);
         V = std::get<1>(policy_and_V_new);
 
-        std::cout << diff << std::endl;
         if (diff < 0.1)
             break;
     }

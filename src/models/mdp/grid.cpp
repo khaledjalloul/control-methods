@@ -12,12 +12,12 @@ GridState Grid::index_to_state(int x_index)
     return GridState{x_index / size_, x_index % size_};
 }
 
-std::tuple<int, Eigen::VectorXd> Grid::get_reward_and_trans_prob(int x_index, GridAction u, GridState x_goal)
+std::tuple<int, Vector> Grid::get_reward_and_trans_prob(int x_index, GridAction u, GridState x_goal)
 {
     GridState x_old = index_to_state(x_index);
     GridState x_next;
 
-    Eigen::VectorXd trans_prob(size_ * size_);
+    Vector trans_prob = Vector::Zero(size_ * size_);
 
     if (u == GridAction::stay)
         x_next = x_old;

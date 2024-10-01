@@ -1,14 +1,15 @@
 #include "q_learning.hpp"
+#include <iomanip>
 
 template <typename State, typename Action>
 QLearning<State, Action>::QLearning(MDP_Ptr mdp, int nx, int nu, State x_initial, State x_goal)
     : mdp_(std::move(mdp)), nx_(nx), nu_(nu), x_initial_(x_initial), x_goal_(x_goal)
 {
-    Q_ = Eigen::MatrixXd::Zero(nx_, nu_);
+    Q_ = Matrix::Zero(nx_, nu_);
 }
 
 template <typename State, typename Action>
-Eigen::MatrixXd QLearning<State, Action>::get_Q()
+Matrix QLearning<State, Action>::get_Q()
 {
     return Q_;
 }
@@ -28,9 +29,9 @@ Action QLearning<State, Action>::sample_action(int index, int iter, int num_iter
 }
 
 template <typename State, typename Action>
-Eigen::MatrixXd QLearning<State, Action>::get_policy()
+Matrix QLearning<State, Action>::get_policy()
 {
-    Eigen::MatrixXd policy = Eigen::MatrixXd::Zero(nx_, nu_);
+    Matrix policy = Matrix::Zero(nx_, nu_);
 
     for (int x = 0; x < nx_; x++)
     {
@@ -48,10 +49,11 @@ Eigen::MatrixXd QLearning<State, Action>::get_policy()
 template <typename State, typename Action>
 void QLearning<State, Action>::train(int num_eps)
 {
+    std::cout << std::setprecision(2) << std::fixed;
 
     for (int i = 0; i < num_eps; i++)
     {
-        std::cout << "Training: " << ((float)i / num_eps) * 100 << "%" << std::endl;
+        std::cout << "\rTraining: " << ((float)i / num_eps) * 100 << "%" << std::flush;
 
         State x = x_initial_;
 
@@ -75,6 +77,8 @@ void QLearning<State, Action>::train(int num_eps)
             x = x_next;
         }
     }
+
+    std::cout << std::endl;
 }
 
 template class QLearning<GridState, GridAction>;

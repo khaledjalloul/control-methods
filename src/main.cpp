@@ -23,7 +23,7 @@ void tic_tac_toe_demo()
     QLearning<TTTState, TTTAction> mdp(ttt, (int)pow(3, 9), 9, Eigen::Matrix3i::Zero(), Eigen::Matrix3i::Zero());
 
     mdp.train(70000);
-    Eigen::MatrixXd policy = mdp.get_policy();
+    Matrix policy = mdp.get_policy();
     ttt->play_match(10, policy);
 }
 
@@ -31,19 +31,19 @@ void policy_value_iteration_demo()
 {
     int size = 5;
     auto init = GridState{0, 0};
-    auto goal = GridState{2, 3};
+    auto goal = GridState{3, 4};
 
     auto grid = std::make_shared<Grid>(size);
     PolicyValueIteration<GridState, GridAction> policy_value_iteration(grid, size * size, GridAction::bottom + 1, goal);
 
     std::tuple<Matrix, Vector> policy_V = policy_value_iteration.train_policy_iteration();
-    std::cout << std::get<0>(policy_V) << std::endl;
-    std::cout << std::get<1>(policy_V).reshaped(size, size) << "\n"
+    std::cout << "Policy Iteration:\n"
+              << std::get<1>(policy_V).reshaped<Eigen::RowMajor>(size, size) << "\n "
               << std::endl;
 
     policy_V = policy_value_iteration.train_value_iteration();
-    std::cout << std::get<0>(policy_V) << std::endl;
-    std::cout << std::get<1>(policy_V).reshaped(size, size) << std::endl;
+    std::cout << "Value Iteration:\n"
+              << std::get<1>(policy_V).reshaped<Eigen::RowMajor>(size, size) << std::endl;
 }
 
 int main(int argc, char **argv)
@@ -56,17 +56,11 @@ int main(int argc, char **argv)
     {
         std::string arg = argv[1];
         if (arg == "grid" || arg == "1")
-        {
             grid_demo();
-        }
         else if (arg == "tic_tac_toe" || arg == "2")
-        {
             tic_tac_toe_demo();
-        }
         else if (arg == "policy_value_iteration" || arg == "3")
-        {
             policy_value_iteration_demo();
-        }
     }
 
     return 0;
