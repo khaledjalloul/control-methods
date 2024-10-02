@@ -1,38 +1,27 @@
-// #include "qLearning.h"
+#pragma once
 
-// int main()
-// {
-//     Matrix2d A;
-//     MatrixXd B(2, 1);
+#include <iostream>
+#include <memory>
 
-//     A << 1, 0,
-//         0, 1;
-//     B << 1, 1;
+#include <eigen3/Eigen/Dense>
+#include <OsqpEigen/OsqpEigen.h>
 
-//     int T = 15;
+#include "state_space.hpp"
 
-//     LinearStateSpaceModel model(A, B);
-//     QLearning qLearning(model);
+using Matrix = Eigen::MatrixXd;
+using Vector = Eigen::VectorXd;
 
-//     X x0(-3, -3);
-//     X xss(10, 10);
-//     U uss = 0;
+class MPC
+{
+public:
+    MPC(const std::shared_ptr<LTIStateSpaceModel> &model, int K);
 
-//     qLearning.train(x0, xss, uss, 1000, T);
+    Vector step(Vector x0, Vector x_ss, Vector u_ss);
 
-//     VectorXd Q = qLearning.getQAtState(x0);
-//     cout << Q << endl;
-
-//     for (int i = 0; i < T; i++)
-//     {
-//         VectorXd Q = qLearning.getQAtState(x0);
-//         int uI = qLearning.sampleInput(x0);
-//         U u = model.possibleInputs[uI];
-//         float cost = model.getReward(x0, u, xss, uss);
-
-//         cout << "x = (" << x0(0) << ", " << x0(1) << "); u = " << u << "; cost = " << cost << endl;
-//         x0 = model.xNext(x0, u);
-//     }
-
-//     return 0;
-// }
+private:
+    int K_, nx_, nu_, num_vars_, num_constraints_;
+    Matrix Q_, R_;
+    double slack_cost_;
+    std::shared_ptr<LTIStateSpaceModel> model_;
+    OsqpEigen::Solver solver_;
+};

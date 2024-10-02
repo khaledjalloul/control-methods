@@ -18,6 +18,7 @@ set(MODELS
 set(CONTROLLERS
     src/controllers/q_learning.cpp
     src/controllers/policy_value_iteration.cpp
+    src/controllers/mpc.cpp
 )
 
 add_library(${PROJECT_NAME} ${MODELS} ${CONTROLLERS})

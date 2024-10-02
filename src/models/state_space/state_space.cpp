@@ -1,9 +1,11 @@
 #include "state_space.hpp"
 
-LTI_StateSpaceModel::LTI_StateSpaceModel(Matrix A, Matrix B) : A_(A), B_(B)
+LTIStateSpaceModel::LTIStateSpaceModel(Matrix A, Matrix B) : A(A), B(B)
 {
-    nx_ = A.rows();
-    nu_ = B.cols();
+    nx = A.rows();
+    nu = B.cols();
+
+    solver_.settings()->setVerbosity(false);
 
     // int num_inputs = sizeof(possible_inputs) / sizeof(*possible_inputs);
 
@@ -13,54 +15,45 @@ LTI_StateSpaceModel::LTI_StateSpaceModel(Matrix A, Matrix B) : A_(A), B_(B)
     // }
 }
 
-Matrix LTI_StateSpaceModel::x_next(Vector x, Vector u)
+Matrix LTIStateSpaceModel::x_next(Vector x, Vector u)
 {
-    return A_ * x + B_ * u;
+    return A * x + B * u;
 }
 
-Vector LTI_StateSpaceModel::find_steady_state(Vector desired_x_ss, std::optional<Vector> desired_u_ss)
+SteadyState LTIStateSpaceModel::find_steady_state(Vector desired_x_ss, std::optional<Vector> desired_u_ss)
 {
-    OsqpEigen::Solver solver;
+    int n = nx + nu;
+    solver_.data()->setNumberOfVariables(n);
 
-    int n = desired_x_ss.size() + (desired_u_ss.has_value() ? desired_u_ss.value().size() : 0);
-
-    Eigen::SparseMatrix<double> H(n, n);
-    H.setIdentity();
-
-    Vector g = Vector(n);
-    g.topRows(nx_) << -desired_x_ss;
+    Matrix H = Matrix::Zero(n, n);
+    H.block(0, 0, nx, nx) = Matrix::Identity(nx, nx);
     if (desired_u_ss.has_value())
-        g.bottomRows(nu_) << -desired_u_ss.value();
+        H.block(nx, nx, nu, nu) = Matrix::Identity(nu, nu) * 0.3;
+    solver_.data()->setHessianMatrix((Eigen::SparseMatrix<double>)H.sparseView());
 
-    Eigen::SparseMatrix<double> C(nx_, nx_ + nu_);
-    C.setZero();
-    C.block(0, 0, nx_, nx_) = Matrix::Identity(nx_, nx_) - A_;
-    C.block(0, nx_, nx_, nu_) = -B_;
-    // if (desired_u_ss.has_value())
-    //     C.block(nx_, 0, nu_, nu_) = Matrix::Identity(nu_, nu_);
+    Vector g = Vector::Zero(n);
+    g.head(nx) << -desired_x_ss;
+    if (desired_u_ss.has_value())
+        g.segment(nx, nu) << -desired_u_ss.value();
+    solver_.data()->setGradient(g);
 
-    // Solve (x - x_ss)^T * Q * (x - x_ss) + (u - u_ss)^T * R * (u - u_ss)
-    // subject to x = A * x + B * u ->
-    // [x, u] = [A, B, 0, I] * [x, u]
+    Matrix C = Matrix::Zero(nx, nx + nu);
+    C.block(0, 0, nx, nx) = Matrix::Identity(nx, nx) - A;
+    C.block(0, nx, nx, nu) = -B;
+    solver_.data()->setNumberOfConstraints(nx);
+    solver_.data()->setLinearConstraintsMatrix((Eigen::SparseMatrix<double>)C.sparseView());
 
-    Vector l_u = Vector::Zero(n);
+    Vector l_u = Vector::Zero(nx);
+    solver_.data()->setBounds(l_u, l_u);
 
-    solver.data()->setNumberOfVariables(n);
-    solver.data()->setNumberOfConstraints(nx_);
+    solver_.initSolver();
+    solver_.solveProblem();
+    Vector sol = solver_.getSolution();
 
-    solver.data()->setHessianMatrix(H);
-    solver.data()->setGradient(g);
-    solver.data()->setLinearConstraintsMatrix(C);
-    solver.data()->setBounds(l_u, l_u);
-
-    solver.initSolver();
-    solver.solveProblem();
-
-    Vector sol = solver.getSolution();
-    return sol;
+    return {sol.head(nx), sol.tail(nu)};
 }
 
-// // float LTI_StateSpaceModel::get_reward(Vector x, Vector u, Vector x_ss, Vector u_ss)
+// // float LTIStateSpaceModel::get_reward(Vector x, Vector u, Vector x_ss, Vector u_ss)
 // {
 //     return (x - xss).dot(x - xss) + pow(u - uss, 2) * 0.1;
 // }

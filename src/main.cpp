@@ -2,6 +2,7 @@
 
 #include "controllers/q_learning.hpp"
 #include "controllers/policy_value_iteration.hpp"
+#include "controllers/mpc.hpp"
 
 void grid_demo()
 {
@@ -46,11 +47,36 @@ void policy_value_iteration_demo()
               << policy_V.V.reshaped<Eigen::RowMajor>(size, size) << std::endl;
 }
 
+void mpc_demo()
+{
+    Eigen::Matrix2d A{{1, 0.1},
+                      {-0.1, 1}};
+    Eigen::Matrix2d B{{1, 0},
+                      {0, 1}};
+    auto model = std::make_shared<LTIStateSpaceModel>(A, B);
+
+    int K = 3;
+    MPC mpc(model, K);
+
+    Eigen::Vector2d x0(-1, 3);
+    Eigen::Vector2d desired_x_ss(3, 4);
+    Eigen::Vector2d desired_u_ss(0, 0);
+    SteadyState stead_state = model->find_steady_state(desired_x_ss, desired_u_ss);
+
+    std::cout << "Steady State:\nX:\n"
+              << stead_state.x_ss << "\nU:\n"
+              << stead_state.u_ss << std::endl;
+
+    Vector u = mpc.step(x0, stead_state.x_ss, stead_state.u_ss);
+    std::cout << "Solution:\n"
+              << u << std::endl;
+}
+
 int main(int argc, char **argv)
 {
     if (argc == 1)
     {
-        std::cout << "Please provide an argument:\n- grid (1)\n- tic_tac_toe (2)\n- policy_value_iteration (3)" << std::endl;
+        std::cout << "Please provide an argument:\n- grid (1)\n- tic_tac_toe (2)\n- policy_value_iteration (3)\n- mpc (4)" << std::endl;
     }
     else
     {
@@ -61,6 +87,8 @@ int main(int argc, char **argv)
             tic_tac_toe_demo();
         else if (arg == "policy_value_iteration" || arg == "3")
             policy_value_iteration_demo();
+        else if (arg == "mpc" || arg == "4")
+            mpc_demo();
     }
 
     return 0;

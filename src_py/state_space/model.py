@@ -42,9 +42,11 @@ class LinearStateSpaceModel:
             return x_ss.value, u_ss.value
 
 if __name__ == '__main__':
-    model = LinearStateSpaceModel()
+    A = np.array([[1, 1], [-1, 1]])
+    B = np.array([[1, 0], [0, 1]])
+    model = LinearStateSpaceModel(A, B)
     
-    x_ss, u_ss = model.find_steady_state([2, 7], [1, 0])
+    x_ss, u_ss = model.find_steady_state([3, 4], [0, 0])
     
     print(x_ss, u_ss)
     print(model.x_next(x_ss, u_ss))
