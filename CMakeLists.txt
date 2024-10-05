@@ -5,6 +5,7 @@ set(PACKAGE_DEPENDENCIES
     OsqpEigen
 )
 
+find_package(Python3 COMPONENTS Interpreter Development NumPy REQUIRED)
 foreach(PKG ${PACKAGE_DEPENDENCIES})
     find_package(${PKG} REQUIRED)
 endforeach()
@@ -21,9 +22,28 @@ set(CONTROLLERS
     src/controllers/mpc.cpp
 )
 
-add_library(${PROJECT_NAME} ${MODELS} ${CONTROLLERS})
-target_link_libraries(${PROJECT_NAME} OsqpEigen::OsqpEigen)
-include_directories(${PROJECT_NAME} src/models/mdp/ src/models/state_space/)
+set(DEMOS
+    src/demos/grid.cpp
+    src/demos/tic_tac_toe.cpp
+    src/demos/policy_value_iteration.cpp
+    src/demos/mpc.cpp
+)
+
+add_library(${PROJECT_NAME}
+    ${MODELS}
+    ${CONTROLLERS}
+    ${DEMOS}
+)
+target_link_libraries(${PROJECT_NAME}
+    OsqpEigen::OsqpEigen
+    ${Python3_LIBRARIES}
+)
+include_directories(${PROJECT_NAME}
+    src/models/mdp/
+    src/models/state_space/
+    ${Python3_INCLUDE_DIRS}
+    ${Python3_NumPy_INCLUDE_DIRS}
+)
 
 add_executable(${PROJECT_NAME}_main src/main.cpp)
 target_link_libraries(${PROJECT_NAME}_main ${PROJECT_NAME})
