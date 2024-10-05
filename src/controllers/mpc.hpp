@@ -1,15 +1,8 @@
 #pragma once
 
-#include <iostream>
 #include <memory>
 
-#include <eigen3/Eigen/Dense>
-#include <OsqpEigen/OsqpEigen.h>
-
 #include "state_space.hpp"
-
-using Matrix = Eigen::MatrixXd;
-using Vector = Eigen::VectorXd;
 
 class MPC
 {
