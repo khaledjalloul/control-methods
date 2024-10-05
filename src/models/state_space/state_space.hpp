@@ -17,12 +17,16 @@ struct SteadyState
 class LTIStateSpaceModel
 {
 public:
-    int nx, nu;
-    Matrix A, B;
+    int nx, nu, ny;
+    Matrix A, B, C;
 
     LTIStateSpaceModel(Matrix A, Matrix B);
 
     Matrix x_next(Vector x, Vector u);
+
+    Vector y(Vector x);
+
+    Matrix y_mat(Matrix x_mat);
 
     SteadyState find_steady_state(Vector desired_x_ss, std::optional<Vector> desired_u_ss = std::nullopt);
 

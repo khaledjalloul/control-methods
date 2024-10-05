@@ -8,13 +8,12 @@ MPC::MPC(const std::shared_ptr<LTIStateSpaceModel> &model, int K)
 
     Q_ = Matrix::Identity(nx_, nx_);
     R_ = Matrix::Identity(nu_, nu_) * 0.3;
-    slack_cost_ = 300;
     num_vars_ = (K_ + 1) * nx_ + K_ * nu_;
-    num_constraints_ = (K_ + 1) * nx_ + nx_ + nu_;
+    num_constraints_ = (K_ + 1) * nx_ + nx_ + nu_ + K_ * nu_;
 
     solver_.settings()->setVerbosity(false);
     solver_.data()->setNumberOfVariables(num_vars_);
-    solver_.data()->setNumberOfConstraints(num_constraints_ + K_ * nu_);
+    solver_.data()->setNumberOfConstraints(num_constraints_);
 }
 
 Vector MPC::step(Vector x0, Vector x_ss, Vector u_ss)
@@ -56,9 +55,9 @@ Vector MPC::step(Vector x0, Vector x_ss, Vector u_ss)
        u_ss
     */
 
-    Matrix dynamics_constr_A = Matrix::Zero(num_constraints_ + K_ * nu_, num_vars_);
-    Vector dynamics_constr_u = Vector::Zero(num_constraints_ + K_ * nu_);
-    Vector dynamics_constr_l = Vector::Zero(num_constraints_ + K_ * nu_);
+    Matrix dynamics_constr_A = Matrix::Zero(num_constraints_, num_vars_);
+    Vector dynamics_constr_u = Vector::Zero(num_constraints_);
+    Vector dynamics_constr_l = Vector::Zero(num_constraints_);
 
     // x0 constraint
     dynamics_constr_A.block(0, 0, nx_, nx_) = Matrix::Identity(nx_, nx_);
@@ -83,7 +82,7 @@ Vector MPC::step(Vector x0, Vector x_ss, Vector u_ss)
 
     // Additional constraints
     dynamics_constr_A.block((K_ + 2) * nx_ + nu_, (K_ + 1) * nx_, K_ * nu_, K_ * nu_) = Matrix::Identity(K_ * nu_, K_ * nu_);
-    dynamics_constr_l.segment((K_ + 2) * nx_ + nu_, K_ * nu_) = Vector::Constant(K_ * nu_, -100);
+    dynamics_constr_l.segment((K_ + 2) * nx_ + nu_, K_ * nu_) = Vector::Constant(K_ * nu_, -3);
     dynamics_constr_u.segment((K_ + 2) * nx_ + nu_, K_ * nu_) = Vector::Constant(K_ * nu_, 3);
 
     // Solver Configuration

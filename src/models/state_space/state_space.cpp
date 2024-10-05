@@ -5,6 +5,9 @@ LTIStateSpaceModel::LTIStateSpaceModel(Matrix A, Matrix B) : A(A), B(B)
     nx = A.rows();
     nu = B.cols();
 
+    ny = nx;
+    C = Matrix::Identity(nx, nx);
+
     solver_.settings()->setVerbosity(false);
 
     // int num_inputs = sizeof(possible_inputs) / sizeof(*possible_inputs);
@@ -18,6 +21,16 @@ LTIStateSpaceModel::LTIStateSpaceModel(Matrix A, Matrix B) : A(A), B(B)
 Matrix LTIStateSpaceModel::x_next(Vector x, Vector u)
 {
     return A * x + B * u;
+}
+
+Vector LTIStateSpaceModel::y(Vector x)
+{
+    return C * x;
+}
+
+Matrix LTIStateSpaceModel::y_mat(Matrix x_mat)
+{
+    return C * x_mat;
 }
 
 SteadyState LTIStateSpaceModel::find_steady_state(Vector desired_x_ss, std::optional<Vector> desired_u_ss)

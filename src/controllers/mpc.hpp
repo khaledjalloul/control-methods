@@ -14,7 +14,6 @@ public:
 private:
     int K_, nx_, nu_, num_vars_, num_constraints_;
     Matrix Q_, R_;
-    double slack_cost_;
     std::shared_ptr<LTIStateSpaceModel> model_;
     OsqpEigen::Solver solver_;
 };

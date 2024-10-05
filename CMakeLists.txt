@@ -20,13 +20,14 @@ set(CONTROLLERS
     src/controllers/q_learning.cpp
     src/controllers/policy_value_iteration.cpp
     src/controllers/mpc.cpp
+    src/controllers/deepc.cpp
 )
 
 set(DEMOS
     src/demos/grid.cpp
     src/demos/tic_tac_toe.cpp
     src/demos/policy_value_iteration.cpp
-    src/demos/mpc.cpp
+    src/demos/mpc_deepc.cpp
 )
 
 add_library(${PROJECT_NAME}

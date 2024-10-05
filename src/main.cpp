@@ -16,8 +16,8 @@ int main(int argc, char **argv)
             tic_tac_toe_demo();
         else if (arg == "policy_value_iteration" || arg == "3")
             policy_value_iteration_demo();
-        else if (arg == "mpc" || arg == "4")
-            mpc_demo();
+        else if (arg == "mpc_deepc" || arg == "4")
+            mpc_deepc_demo();
     }
 
     return 0;
