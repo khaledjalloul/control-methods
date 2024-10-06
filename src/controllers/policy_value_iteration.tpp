@@ -1,5 +1,3 @@
-#include "policy_value_iteration.hpp"
-
 template <class State, class Action>
 PolicyValueIteration<State, Action>::PolicyValueIteration(MDP_Ptr mdp, int nx, int nu, State x_goal)
     : mdp_(std::move(mdp)), nx_(nx), nu_(nu), x_goal_(x_goal)
@@ -96,6 +94,3 @@ PolicyValue PolicyValueIteration<State, Action>::train_value_iteration(int num_i
 
     return {policy, V};
 }
-
-template class PolicyValueIteration<GridState, GridAction>;
-template class PolicyValueIteration<TTTState, TTTAction>;

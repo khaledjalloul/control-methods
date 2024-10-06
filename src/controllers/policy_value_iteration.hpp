@@ -32,3 +32,5 @@ private:
     float gamma_ = 0.9;
     State x_goal_;
 };
+
+#include "policy_value_iteration.tpp"

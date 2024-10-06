@@ -17,8 +17,6 @@ set(MODELS
 )
 
 set(CONTROLLERS
-    src/controllers/q_learning.cpp
-    src/controllers/policy_value_iteration.cpp
     src/controllers/mpc.cpp
     src/controllers/deepc.cpp
 )

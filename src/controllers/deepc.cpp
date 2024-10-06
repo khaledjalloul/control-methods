@@ -21,7 +21,7 @@ DeePC::DeePC(const std::shared_ptr<LTIStateSpaceModel> &model) : model_(std::mov
     {
         Vector u = u_sim.col(i);
         x_sim.col(i + 1) = model_->x_next(x_sim.col(i), u);
-        y_sim.col(i) = model->y(x_sim.col(i));
+        y_sim.col(i) = model->y<Vector>(x_sim.col(i));
     }
 
     num_hankel_columns_ = T_traj - L_ + 1;

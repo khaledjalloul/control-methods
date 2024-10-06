@@ -24,15 +24,13 @@ public:
 
     Matrix x_next(Vector x, Vector u);
 
-    Vector y(Vector x);
-
-    Matrix y_mat(Matrix x_mat);
+    template <typename T>
+    T y(T x);
 
     SteadyState find_steady_state(Vector desired_x_ss, std::optional<Vector> desired_u_ss = std::nullopt);
-
-    // float possibleInputs[20];
-    // float get_reward(Vector x, Vector u, State x_ss, Vector u_ss);
 
 private:
     OsqpEigen::Solver solver_;
 };
+
+#include "state_space.tpp"

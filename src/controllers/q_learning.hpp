@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <iomanip>
 
 #include "grid.hpp"
 #include "tic_tac_toe.hpp"
@@ -28,3 +29,5 @@ private:
     Matrix Q_;
     State x_initial_, x_goal_;
 };
+
+#include "q_learning.tpp"

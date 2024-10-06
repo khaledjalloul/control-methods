@@ -1,6 +1,3 @@
-#include "q_learning.hpp"
-#include <iomanip>
-
 template <typename State, typename Action>
 QLearning<State, Action>::QLearning(MDP_Ptr mdp, int nx, int nu, State x_initial, State x_goal)
     : mdp_(std::move(mdp)), nx_(nx), nu_(nu), x_initial_(x_initial), x_goal_(x_goal)
@@ -80,6 +77,3 @@ void QLearning<State, Action>::train(int num_eps)
 
     std::cout << std::endl;
 }
-
-template class QLearning<GridState, GridAction>;
-template class QLearning<TTTState, TTTAction>;

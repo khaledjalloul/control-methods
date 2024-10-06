@@ -81,7 +81,7 @@ void mpc_deepc_demo()
     for (int i = 0; i < T; i++)
     {
         u_mpc.col(i) = mpc.step(x_mpc.col(i), x_ss, u_ss);
-        u_deepc.col(i) = deepc.step(x_deepc.col(i), x_ss, u_ss, u_deepc, model->y_mat(x_deepc), i);
+        u_deepc.col(i) = deepc.step(x_deepc.col(i), x_ss, u_ss, u_deepc, model->y(x_deepc), i);
 
         x_mpc.col(i + 1) = model->x_next(x_mpc.col(i), u_mpc.col(i));
         x_deepc.col(i + 1) = model->x_next(x_deepc.col(i), u_deepc.col(i));
