@@ -46,6 +46,3 @@ include_directories(${PROJECT_NAME}
 
 add_executable(${PROJECT_NAME}_main src/main.cpp)
 target_link_libraries(${PROJECT_NAME}_main ${PROJECT_NAME})
-
-install(TARGETS ${PROJECT_NAME} DESTINATION lib/${PROJECT_NAME})
-install(TARGETS ${PROJECT_NAME}_main DESTINATION bin/${PROJECT_NAME})

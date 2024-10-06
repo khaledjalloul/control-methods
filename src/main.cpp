@@ -5,7 +5,7 @@ int main(int argc, char **argv)
 {
     if (argc == 1)
     {
-        std::cout << "Please provide an argument:\n- grid (1)\n- tic_tac_toe (2)\n- policy_value_iteration (3)\n- mpc (4)" << std::endl;
+        std::cout << "Please provide an argument:\n- grid (1)\n- tic_tac_toe (2)\n- policy_value_iteration (3)\n- mpc_deepc (4)" << std::endl;
     }
     else
     {
